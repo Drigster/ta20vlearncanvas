@@ -9,6 +9,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.lastShot = 0;
         this.body.setDrag(200)
 
+        this.arrowsLeft = 3;
+        this.arrows = [];
 
         this.anims.create({
             key: 'knight_m_idle',
@@ -44,6 +46,19 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             this.pointer = {x: pointer.worldX, y: pointer.worldY};
             
         });
+
+        this.text = scene.add.text(scene.cameras.main.centerX - scene.cameras.main.width/2, scene.cameras.main.centerY - scene.cameras.main.height/2)
+        .setText('Arrows - ' + this.arrowsLeft)
+        .setScrollFactor(0,0)
+        this.text.setShadow(1, 1, '#000000', 2); 
+
+        scene.physics.add.collider(this.arrows, this, (collision) => {
+            this.arrowsLeft += 1;
+            this.text.setText('Arrows - ' + this.arrowsLeft);
+            this.arrows.splice(this.arrows.indexOf(collision), 1);
+            
+            collision.destroy();
+        });
     }
 
     isMoving(){
@@ -65,8 +80,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         }
         if(this.keys.space.isDown){
             if(time-this.lastShot > 1000){
-                this.scene.add.existing(new Arrow(this.scene, this.x, this.y, this.pointer));
-                this.lastShot = time;
+                if(this.arrowsLeft > 0){
+                    let arrow = this.scene.add.existing(new Arrow(this.scene, this.x, this.y, this.pointer));
+                    this.arrows.push(arrow);
+                    this.lastShot = time;
+                    this.arrowsLeft -= 1;
+                    this.text.setText('Arrows - ' + this.arrowsLeft);
+                }
             }
         }
 
@@ -82,7 +102,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             this.anims.play('knight_m_idle', true);
         }
         if(this.body.blocked.down){
-            console.log(this.body);
+            //console.log(this.body);
         }
     }
 }

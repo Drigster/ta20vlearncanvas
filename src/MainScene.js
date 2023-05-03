@@ -18,7 +18,7 @@ export class MainScene extends Scene{
         // The first parameter is the name of the tileset in Tiled and the second parameter is the key
         // of the tileset image used when loading the file in preload.
         const tiles = this.map.addTilesetImage('0x72_DungeonTilesetII_v1.4', 'atlas');
-        this.cameras.main.setZoom(4);
+        this.cameras.main.setZoom(1);
         console.log(this.cameras.main);
         // You can load a layer from the map using the layer name from Tiled, or by using the layer
         // index (0 in this case).
@@ -41,14 +41,7 @@ export class MainScene extends Scene{
         this.physics.add.collider(player, this.map.layers[0].tilemapLayer);
         const layer2 = this.map.createLayer(1, tiles, 0, 0);
         console.log(this);
-        this.i = 0;
-        this.text = this.add.text(this.cameras.main.centerX-this.cameras.main.displayWidth/2, this.cameras.main.centerY-this.cameras.main.displayHeight/2)
-        .setText('Click to move')
-        .setScrollFactor(0,0)
-        this.text.setShadow(1, 1, '#000000', 2); 
-
     }
     update(){
-        this.text.text = this.i++;
     }
 }
